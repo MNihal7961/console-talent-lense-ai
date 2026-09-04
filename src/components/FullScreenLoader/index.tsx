@@ -12,7 +12,7 @@ const FullScreenLoader: React.FC<FullScreenLoaderProps> = ({
   return (
     <div className="full-screen-loader">
       <span className="full-screen-loader-spinner" aria-hidden="true" />
-      <Typography.Text className="full-screen-loader-text">
+      <Typography.Text strong className="full-screen-loader-text text-primary">
         {text}
       </Typography.Text>
     </div>
