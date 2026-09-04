@@ -4,6 +4,7 @@ import ProtectedRoute from "../guards/ProtectedRoute";
 import PublicRoute from "../guards/PublicRoute";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
+import Layout from "../layout/Layout";
 import Home from "../pages/home/Home";
 
 function Router() {
@@ -17,7 +18,9 @@ function Router() {
           </Route>
 
           <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Home />} />
+            <Route element={<Layout />}>
+              <Route path="/" element={<Home />} />
+            </Route>
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

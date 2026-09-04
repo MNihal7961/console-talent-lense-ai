@@ -1,7 +1,11 @@
+import SidebarContent from "./SidebarContent";
+
 const AppSidebar = () => {
   return (
-    <div>AppSidebar</div>
-  )
-}
+    <aside className="sidebar">
+      <SidebarContent />
+    </aside>
+  );
+};
 
-export default AppSidebar
+export default AppSidebar;
