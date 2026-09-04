@@ -1,0 +1,41 @@
+@use "./variables" as *;
+
+.app-toast-container {
+  width: auto;
+  min-width: 300px;
+}
+
+.app-toast {
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid $color-border;
+  background: #ffffff;
+  font-family: $font-family;
+}
+
+.app-toast .Toastify__toast-body {
+  padding: 0;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.app-toast .Toastify__close-button {
+  opacity: 1;
+  align-self: center;
+}
+
+.Toastify__toast--success .Toastify__toast-icon svg {
+  fill: $color-success;
+}
+
+.Toastify__toast--error .Toastify__toast-icon svg {
+  fill: $color-danger;
+}
+
+.Toastify__toast--info .Toastify__toast-icon svg {
+  fill: $color-primary;
+}
+
+.Toastify__toast--warning .Toastify__toast-icon svg {
+  fill: $color-warning;
+}
