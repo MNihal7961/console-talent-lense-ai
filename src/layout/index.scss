@@ -19,6 +19,11 @@
   border-bottom: 1px solid $color-border;
 }
 
+.header-menu-btn {
+  display: none;
+  flex-shrink: 0;
+}
+
 .header-search-wrapper {
   width: 100%;
   max-width: 400px;
@@ -149,4 +154,17 @@
   justify-content: space-between;
   gap: 16px;
   font-size: 13px;
+}
+
+// Responsive: below this width the fixed sidebar is replaced by the drawer
+@media (max-width: 992px) {
+  .sidebar {
+    display: none;
+  }
+
+  .header-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }

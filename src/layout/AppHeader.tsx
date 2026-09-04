@@ -9,8 +9,10 @@ import {
 import { BiSupport } from "react-icons/bi";
 import { FaRegBell } from "react-icons/fa";
 import { FiChevronDown, FiLogOut, FiSearch, FiUser } from "react-icons/fi";
+import { HiOutlineMenu } from "react-icons/hi";
 import useLogout from "../hooks/useLogout";
 import { useAuth } from "../contexts/AuthContext";
+import { useSidebar } from "../contexts/SidebarContext";
 import {
   getUserInitials,
   upperCaseFirstLetter,
@@ -19,6 +21,7 @@ import {
 const AppHeader = () => {
   const { handleLogout } = useLogout();
   const { user } = useAuth();
+  const { openMobileSidebar } = useSidebar();
 
   const userMenuItems: MenuProps["items"] = [
     { key: "profile", label: "Profile", icon: <FiUser /> },
@@ -34,6 +37,13 @@ const AppHeader = () => {
 
   return (
     <header className="header">
+      <Button
+        icon={<HiOutlineMenu />}
+        shape="round"
+        className="header-menu-btn"
+        onClick={openMobileSidebar}
+        aria-label="Open sidebar"
+      />
       <div className="header-search-wrapper">
         <Input
           prefix={<FiSearch />}
