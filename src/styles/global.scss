@@ -1,0 +1,38 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  font-family: $font-family;
+  background-color: #ffffff;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+// Common style utilities
+.text-white {
+  color: #ffffff !important;
+}
+
+.text-primary {
+  color: $color-primary !important;
+}
+
+// Antd default styles override
+.ant-typography {
+  margin: 0 !important;
+}
+
+.ant-divider {
+  margin: 0 !important;
+}
+
+.ant-form-item {
+  margin: 0 !important;
+}
