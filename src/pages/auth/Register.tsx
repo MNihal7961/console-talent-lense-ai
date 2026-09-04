@@ -1,13 +1,21 @@
 import React from "react";
 import { Button, Form, Input, Typography } from "antd";
+import { Link } from "react-router-dom";
 import { FaBalanceScale } from "react-icons/fa";
 import { IoShieldCheckmarkOutline } from "react-icons/io5";
 import { MdAlternateEmail, MdLockOutline } from "react-icons/md";
 import { FiArrowRight } from "react-icons/fi";
+import type { RegisterDTO } from "../../types";
+import useRegister from "../../hooks/useRegister";
 import "./index.scss";
+
+interface RegisterFormValues extends RegisterDTO {
+  confirmPassword: string;
+}
 
 const Register: React.FC = () => {
   const [form] = Form.useForm();
+  const { isRegistering, handleRegister } = useRegister();
 
   return (
     <main className="auth-page">
@@ -64,12 +72,13 @@ const Register: React.FC = () => {
                 evidence.
               </Typography.Text>
             </div>
-            <Form
+            <Form<RegisterFormValues>
               form={form}
               layout="vertical"
               scrollToFirstError
               requiredMark={false}
               className="auth-form-section"
+              onFinish={handleRegister}
             >
               <div className="auth-form-2-col">
                 <Form.Item
@@ -154,17 +163,17 @@ const Register: React.FC = () => {
                   type="primary"
                   htmlType="submit"
                   block
+                  loading={isRegistering}
                   icon={<FiArrowRight />}
                   iconPlacement="end"
                 >
-                  Sign In
+                  Create Account
                 </Button>
               </Form.Item>
 
               <div className="auth-form-create-account-link">
                 <Typography.Text>
-                  Already have an account?
-                  <Typography.Link href="/sign-in">Sign in</Typography.Link>
+                  Already have an account? <Link to="/sign-in">Sign in</Link>
                 </Typography.Text>
               </div>
             </Form>
