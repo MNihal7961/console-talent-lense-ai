@@ -1,14 +1,28 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "../contexts/AuthContext";
+import ProtectedRoute from "../guards/ProtectedRoute";
+import PublicRoute from "../guards/PublicRoute";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
+import Home from "../pages/home/Home";
 
 function Router() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/sign-in" element={<Login />} />
-        <Route path="/sign-up" element={<Register />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route element={<PublicRoute />}>
+            <Route path="/sign-in" element={<Login />} />
+            <Route path="/sign-up" element={<Register />} />
+          </Route>
+
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Home />} />
+          </Route>
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
