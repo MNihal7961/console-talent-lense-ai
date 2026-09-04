@@ -1,13 +1,17 @@
 import React from "react";
 import { Button, Form, Input, Typography } from "antd";
+import { Link } from "react-router-dom";
 import { FaBalanceScale } from "react-icons/fa";
 import { IoShieldCheckmarkOutline } from "react-icons/io5";
 import { MdAlternateEmail, MdLockOutline } from "react-icons/md";
 import { FiArrowRight } from "react-icons/fi";
+import type { LoginDTO } from "../../types";
+import useLogin from "../../hooks/useLogin";
 import "./index.scss";
 
 const Login: React.FC = () => {
   const [form] = Form.useForm();
+  const { isLoging, handleLogin } = useLogin();
 
   return (
     <main className="auth-page">
@@ -63,12 +67,13 @@ const Login: React.FC = () => {
                 Sign in to resume candidate assessments and pipeline audits.
               </Typography.Text>
             </div>
-            <Form
+            <Form<LoginDTO>
               form={form}
               layout="vertical"
               scrollToFirstError
               requiredMark={false}
               className="auth-form-section"
+              onFinish={handleLogin}
             >
               <Form.Item
                 label={<Typography.Text strong>Work Email</Typography.Text>}
@@ -104,6 +109,7 @@ const Login: React.FC = () => {
                   type="primary"
                   htmlType="submit"
                   block
+                  loading={isLoging}
                   icon={<FiArrowRight />}
                   iconPlacement="end"
                 >
@@ -114,7 +120,7 @@ const Login: React.FC = () => {
               <div className="auth-form-create-account-link">
                 <Typography.Text>
                   Don't have an account?{" "}
-                  <Typography.Link href="/sign-up">Sign up</Typography.Link>
+                  <Link to="/sign-up">Sign up</Link>
                 </Typography.Text>
               </div>
             </Form>
