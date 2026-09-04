@@ -15,6 +15,7 @@ const useLogin = () => {
     try {
       setIsLoging(true);
       await login(payload);
+      toast.success("Signed in successfully.");
       const redirectTo =
         (location.state as { from?: { pathname?: string } } | null)?.from
           ?.pathname ?? "/";

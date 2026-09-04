@@ -19,6 +19,7 @@ const useRegister = () => {
       setIsRegistering(true);
       const { confirmPassword, ...payload } = values;
       await register(payload);
+      toast.success("Account created successfully.");
       navigate("/", { replace: true });
     } catch (error: any) {
       console.log("useRegister ~ handleRegister ~ error:", error);

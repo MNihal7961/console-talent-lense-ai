@@ -1,17 +1,13 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { Spin } from "antd";
+import FullScreenLoader from "../components/FullScreenLoader";
 import { useAuth } from "../contexts/AuthContext";
 
 const PublicRoute: React.FC = () => {
   const { isUserLoggedIn, isAuthLoading } = useAuth();
 
   if (isAuthLoading) {
-    return (
-      <div className="route-guard-loader">
-        <Spin size="large" />
-      </div>
-    );
+    return <FullScreenLoader text="Checking your session..." />;
   }
 
   if (isUserLoggedIn) {

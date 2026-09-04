@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { Spin } from "antd";
+import FullScreenLoader from "../components/FullScreenLoader";
 import { useAuth } from "../contexts/AuthContext";
 
 const ProtectedRoute: React.FC = () => {
@@ -8,11 +8,7 @@ const ProtectedRoute: React.FC = () => {
   const location = useLocation();
 
   if (isAuthLoading) {
-    return (
-      <div className="route-guard-loader">
-        <Spin size="large" />
-      </div>
-    );
+    return <FullScreenLoader text="Checking your session..." />;
   }
 
   if (!isUserLoggedIn) {
