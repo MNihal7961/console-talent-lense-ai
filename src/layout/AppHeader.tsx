@@ -11,6 +11,7 @@ import { FaRegBell } from "react-icons/fa";
 import { FiChevronDown, FiLogOut, FiSearch, FiUser } from "react-icons/fi";
 import { HiOutlineMenu } from "react-icons/hi";
 import useLogout from "../hooks/useLogout";
+import useUserPresence from "../hooks/useUserPresence";
 import { useAuth } from "../contexts/AuthContext";
 import { useSidebar } from "../contexts/SidebarContext";
 import {
@@ -22,6 +23,7 @@ const AppHeader = () => {
   const { handleLogout } = useLogout();
   const { user } = useAuth();
   const { openMobileSidebar } = useSidebar();
+  const isOnline = useUserPresence();
 
   const userMenuItems: MenuProps["items"] = [
     { key: "profile", label: "Profile", icon: <FiUser /> },
@@ -62,16 +64,26 @@ const AppHeader = () => {
             align={{ offset: [0, 16] }}
           >
             <div className="header-user">
-              <Avatar
-                shape="circle"
-                className="user-avatar"
-                alt=""
-                icon={
-                  <Typography.Text className="text-white" strong>
-                    {getUserInitials(user)}
-                  </Typography.Text>
-                }
-              />
+              <div className="user-avatar-wrapper">
+                <Avatar
+                  shape="circle"
+                  className="user-avatar"
+                  alt=""
+                  icon={
+                    <Typography.Text className="text-white" strong>
+                      {getUserInitials(user)}
+                    </Typography.Text>
+                  }
+                />
+                <span
+                  className={`user-presence-dot ${
+                    isOnline
+                      ? "user-presence-dot-online"
+                      : "user-presence-dot-offline"
+                  }`}
+                  title={isOnline ? "Online" : "Offline"}
+                />
+              </div>
               <div className="header-user-info">
                 <Typography.Text>
                   {upperCaseFirstLetter(user.firstName)}{" "}
