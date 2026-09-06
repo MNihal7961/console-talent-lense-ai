@@ -1,11 +1,30 @@
 import { Typography } from "antd";
-import { IoGrid } from "react-icons/io5";
+import { IoBriefcase, IoGrid } from "react-icons/io5";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface SidebarContentProps {
   onNavigate?: () => void;
 }
 
+const navItems = [
+  { path: "/", label: "Dashboard", icon: <IoGrid /> },
+  { path: "/job-post", label: "Job Posts", icon: <IoBriefcase /> },
+];
+
 const SidebarContent = ({ onNavigate }: SidebarContentProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
+    onNavigate?.();
+  };
+
+  const isActive = (path: string) =>
+    path === "/"
+      ? location.pathname === "/"
+      : location.pathname.includes(path);
+
   return (
     <>
       <div>
@@ -15,15 +34,20 @@ const SidebarContent = ({ onNavigate }: SidebarContentProps) => {
       </div>
 
       <nav className="sidebar-nav">
-        <div
-          className="sidebar-item sidebar-item-active "
-          onClick={onNavigate}
-        >
-          <IoGrid />
-          <Typography.Text className="sidebar-item-label">
-            Dashboard
-          </Typography.Text>
-        </div>
+        {navItems.map((item) => (
+          <div
+            key={item.path}
+            className={`sidebar-item ${
+              isActive(item.path) ? "sidebar-item-active" : ""
+            }`}
+            onClick={() => handleNavigate(item.path)}
+          >
+            {item.icon}
+            <Typography.Text className="sidebar-item-label">
+              {item.label}
+            </Typography.Text>
+          </div>
+        ))}
       </nav>
     </>
   );
