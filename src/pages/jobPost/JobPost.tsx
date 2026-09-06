@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Input, Select, Table, Typography } from "antd";
+import { Button, Empty, Input, Select, Table, Typography } from "antd";
 import type { TableColumnsType } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import useJobPosts from "../../hooks/useJobPosts";
 import type { JobPost as JobPostType } from "../../interface/job-post";
@@ -162,8 +163,23 @@ const JobPost = () => {
         rowKey="_id"
         columns={columns}
         dataSource={filteredJobPosts}
-        loading={{ spinning: isJobPostLoading, tip: "Loading job posts..." }}
+        loading={{
+          spinning: isJobPostLoading,
+          tip: "Loading job posts...",
+          indicator: <LoadingOutlined spin />,
+        }}
         scroll={{ x: 720 }}
+        locale={{
+          emptyText: isJobPostLoading ? null : (
+            <Empty
+              description={
+                hasActiveFilters
+                  ? "No job posts match your search."
+                  : "No job posts found."
+              }
+            />
+          ),
+        }}
         pagination={{
           current: currentPage,
           pageSize: PAGE_SIZE,
