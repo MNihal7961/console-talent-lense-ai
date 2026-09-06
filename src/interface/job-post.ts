@@ -18,3 +18,8 @@ export interface JobPost {
   createdAt: string;
   updatedAt: string;
 }
+
+export type GeneratedJobPost = Omit<
+  JobPost,
+  "_id" | "createdBy" | "createdAt" | "updatedAt"
+>;
