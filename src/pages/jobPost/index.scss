@@ -1,0 +1,36 @@
+.job-post-page {
+  .job-post-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .job-post-search {
+    flex: 0 1 320px;
+    min-width: 200px;
+    max-width: 400px;
+  }
+
+  .job-post-sort {
+    flex: 0 0 auto;
+    width: 140px;
+  }
+
+  .job-post-description {
+    margin-bottom: 0 !important;
+  }
+
+  @media (max-width: 576px) {
+    .job-post-filters {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .job-post-search,
+    .job-post-sort {
+      width: 100%;
+    }
+  }
+}
