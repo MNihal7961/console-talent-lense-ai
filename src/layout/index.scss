@@ -133,8 +133,11 @@
 
 .main-content {
   flex: 1;
+  min-height: 0;
   padding: 16px;
   background-color: #f8f9ff;
+  display: flex;
+  flex-direction: column;
 }
 
 // Footer
