@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import type { JobPost } from "../interface/job-post";
 import jobPostService from "../services/job.post.service";
 
-const useJobPosts = () => {
+const useJobPost = () => {
   const [jobPost, setJobPost] = useState<JobPost | null>(null);
   const [isJobPostLoading, setIsJobPostLoading] = useState<boolean>(false);
 
@@ -12,21 +12,18 @@ const useJobPosts = () => {
       const response = await jobPostService.findJobPostById(jobPostId);
       setJobPost(response);
     } catch (error: any) {
-      console.log("useJobPosts ~ loadJobPostDetails ~ error:", error);
+      console.log("useJobPost ~ loadJobPostDetails ~ error:", error);
       setJobPost(null);
     } finally {
       setIsJobPostLoading(false);
     }
   }, []);
 
-  useEffect(() => {
-    loadJobPostDetails();
-  }, [loadJobPostDetails]);
-
   return {
     jobPost,
     isJobPostLoading,
+    loadJobPostDetails,
   };
 };
 
-export default useJobPosts;
+export default useJobPost;
