@@ -1,0 +1,49 @@
+.job-post-details-page {
+  .job-post-details-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .job-post-details-card {
+    border: 1px solid $color-border;
+  }
+
+  .job-post-details-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 16px;
+  }
+
+  .job-post-details-section {
+    margin-top: 24px;
+
+    .ant-typography {
+      margin-bottom: 8px !important;
+    }
+  }
+
+  .job-post-details-list {
+    margin: 0;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .job-post-details-skeleton-tags {
+    margin-top: 16px;
+  }
+
+  .job-post-details-skeleton-block {
+    margin-top: 24px;
+  }
+
+  @media (max-width: 768px) {
+    .job-post-details-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

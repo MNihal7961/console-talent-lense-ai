@@ -1,0 +1,24 @@
+.page-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  &-cta {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 576px) {
+    &-cta {
+      width: 100%;
+
+      .ant-btn {
+        width: 100%;
+      }
+    }
+  }
+}
