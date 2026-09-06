@@ -87,15 +87,22 @@ const JobPost = () => {
       key: "createdAt",
       width: 160,
       render: (createdAt: string) => (
-        <Typography.Text>
-          {dayjs(createdAt).format("DD MMM YYYY").toUpperCase()}
-        </Typography.Text>
+        <div className="job-post-created-at">
+          <Typography.Text>
+            {dayjs(createdAt).format("DD MMM YYYY").toUpperCase()}
+          </Typography.Text>
+          <Typography.Text type="secondary" className="job-post-created-time">
+            {dayjs(createdAt).format("hh:mm A")}
+          </Typography.Text>
+        </div>
       ),
     },
     {
       title: "Title",
       dataIndex: "title",
       key: "title",
+      width: 220,
+      ellipsis: true,
       render: (title: string) => <Typography.Text>{title}</Typography.Text>,
     },
     {
@@ -104,6 +111,7 @@ const JobPost = () => {
       key: "description",
       render: (description: string) => (
         <Typography.Paragraph
+          type="secondary"
           ellipsis={{ rows: 2 }}
           className="job-post-description"
         >
@@ -168,7 +176,7 @@ const JobPost = () => {
           tip: "Loading job posts...",
           indicator: <LoadingOutlined spin />,
         }}
-        scroll={{ x: 720 }}
+        scroll={{ x: 900 }}
         locale={{
           emptyText: isJobPostLoading ? null : (
             <Empty

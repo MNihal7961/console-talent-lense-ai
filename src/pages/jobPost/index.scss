@@ -22,6 +22,16 @@
     margin-bottom: 0 !important;
   }
 
+  .job-post-created-at {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .job-post-created-time {
+    font-size: 12px;
+  }
+
   @media (max-width: 576px) {
     .job-post-filters {
       flex-direction: column;
