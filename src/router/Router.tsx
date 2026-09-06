@@ -7,6 +7,7 @@ import Register from "../pages/auth/Register";
 import Layout from "../layout/Layout";
 import Home from "../pages/home/Home";
 import JobPost from "../pages/jobPost/JobPost";
+import JobPostDetails from "../pages/jobPostDetails/JobPostDetails";
 import JobPostGenrator from "../pages/jobPostGenrator/JobPostGenrator";
 import JobPostcreator from "../pages/jobPostcreator/JobPostcreator";
 
@@ -24,6 +25,7 @@ function Router() {
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
               <Route path="/job-post" element={<JobPost />} />
+              <Route path="/job-post/:id" element={<JobPostDetails />} />
               <Route path="/job-post/generate" element={<JobPostGenrator />} />
               <Route path="/job-post/create" element={<JobPostcreator />} />
             </Route>
