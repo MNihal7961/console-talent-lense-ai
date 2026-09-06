@@ -1,7 +1,7 @@
 import React from 'react'
 import "./index.scss"
 
-const JobPostGenrator = () => {
+const JobPostGenrator:React.FC = () => {
   return (
     <div>JobPostGenrator</div>
   )
