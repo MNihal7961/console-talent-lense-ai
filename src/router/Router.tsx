@@ -6,6 +6,9 @@ import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import Layout from "../layout/Layout";
 import Home from "../pages/home/Home";
+import JobPost from "../pages/jobPost/JobPost";
+import JobPostGenrator from "../pages/jobPostGenrator/JobPostGenrator";
+import JobPostcreator from "../pages/jobPostcreator/JobPostcreator";
 
 function Router() {
   return (
@@ -20,6 +23,9 @@ function Router() {
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
+              <Route path="/job-post" element={<JobPost />} />
+              <Route path="/job-post/generate" element={<JobPostGenrator />} />
+              <Route path="/job-post/create" element={<JobPostcreator />} />
             </Route>
           </Route>
 
