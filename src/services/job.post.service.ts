@@ -16,6 +16,11 @@ export class JobPostService {
     const response = await apiClient.post("/job-post/generate", { message });
     return response.data;
   }
+
+  async saveJobPost(jobPost: GeneratedJobPost): Promise<JobPost> {
+    const response = await apiClient.post("/job-post", jobPost);
+    return response.data;
+  }
 }
 
 const jobPostService = new JobPostService();
