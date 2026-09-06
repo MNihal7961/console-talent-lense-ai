@@ -71,6 +71,30 @@
   color: #ffffff;
 }
 
+.user-avatar-wrapper {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.user-presence-dot {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+
+  &-online {
+    background-color: $color-success;
+  }
+
+  &-offline {
+    background-color: $color-danger;
+  }
+}
+
 // Sidebar
 .sidebar {
   position: sticky;
