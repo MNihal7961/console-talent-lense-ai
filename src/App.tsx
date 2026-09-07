@@ -15,6 +15,12 @@ const App: React.FC = () => {
           colorSuccess: "#17a768",
           colorWarning: "#e8a531",
         },
+        components: {
+          Card: {
+            bodyPadding: 16,
+            headerPadding: 16,
+          },
+        },
       }}
     >
       <Router />

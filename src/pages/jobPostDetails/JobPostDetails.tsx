@@ -1,89 +1,34 @@
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import {
-  Card,
-  Descriptions,
-  Empty,
-  Skeleton,
-  Space,
-  Tag,
-  Typography,
-} from "antd";
-import dayjs from "dayjs";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Button, Tabs } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
+import { TbPlayerPlay } from "react-icons/tb";
 import useJobPost from "../../hooks/useJobPost";
-import type { JobPost as JobPostType } from "../../interface/job-post";
 import PageBreadcrumb from "../../components/common/PageBreadcrumb";
+import JobPostDetailsInfo from "./JobPostDetailsInfo";
+import JobPostApplications from "./JobPostApplications";
 import "./index.scss";
 
-const formatDate = (date?: string) =>
-  date ? dayjs(date).format("DD MMM YYYY").toUpperCase() : "-";
-
-const formatExperienceValue = (years: number) => {
-  if (years === -1) return "Not mentioned";
-  if (years === 0) return "Fresher";
-  return `${years} ${years === 1 ? "year" : "years"}`;
-};
-
-const formatExperienceRange = (experience: JobPostType["experience"]) => {
-  const { minimumYears, maximumYears } = experience;
-
-  if (minimumYears === -1 && maximumYears === -1) {
-    return "Not mentioned";
-  }
-
-  if (minimumYears === 0 && maximumYears === 0) {
-    return "Fresher";
-  }
-
-  return `${formatExperienceValue(minimumYears)} - ${formatExperienceValue(maximumYears)}`;
-};
-
-const JobPostDetailsSkeleton = () => (
-  <div className="job-post-details-grid">
-    <Card className="job-post-details-card">
-      <Skeleton
-        active
-        title={{ width: "40%" }}
-        paragraph={{ rows: 1, width: "25%" }}
-      />
-
-      <Space size={[8, 8]} wrap className="job-post-details-skeleton-tags">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <Skeleton.Button key={index} active size="small" shape="round" />
-        ))}
-      </Space>
-
-      <Skeleton
-        active
-        title={false}
-        paragraph={{ rows: 4 }}
-        className="job-post-details-skeleton-block"
-      />
-
-      <Skeleton
-        active
-        title={{ width: "30%" }}
-        paragraph={{ rows: 2 }}
-        className="job-post-details-skeleton-block"
-      />
-
-      <Skeleton
-        active
-        title={{ width: "30%" }}
-        paragraph={{ rows: 3 }}
-        className="job-post-details-skeleton-block"
-      />
-    </Card>
-
-    <Card className="job-post-details-card">
-      <Skeleton active title={{ width: "50%" }} paragraph={{ rows: 5 }} />
-    </Card>
-  </div>
-);
+type JobPostDetailsTab = "details" | "applications";
 
 const JobPostDetails = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { isJobPostLoading, jobPost, loadJobPostDetails } = useJobPost();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const activeTab: JobPostDetailsTab =
+    searchParams.get("tab") === "applications" ? "applications" : "details";
+
+  const handleTabChange = (key: string) => {
+    setSearchParams(
+      (prev) => {
+        prev.set("tab", key);
+        return prev;
+      },
+      { replace: true },
+    );
+  };
 
   useEffect(() => {
     if (id) loadJobPostDetails(id);
@@ -95,83 +40,55 @@ const JobPostDetails = () => {
         items={[
           { label: "Dashboard", path: "/" },
           { label: "Job Posts", path: "/job-post" },
-          { label: jobPost?.title ?? "Job Post Details" },
+          {
+            label: isJobPostLoading ? (
+              <LoadingOutlined spin />
+            ) : (
+              (jobPost?.title ?? "Job Post Details")
+            ),
+          },
         ]}
+        cta={
+          id && (
+            <Button
+              type="primary"
+              icon={<TbPlayerPlay />}
+              onClick={() => navigate(`/screening/${id}`)}
+            >
+              Start Screening
+            </Button>
+          )
+        }
       />
 
-      {isJobPostLoading ? (
-        <JobPostDetailsSkeleton />
-      ) : !jobPost ? (
-        <Card className="job-post-details-card">
-          <Empty description="Job post not found." />
-        </Card>
-      ) : (
-        <div className="job-post-details-grid">
-          <Card className="job-post-details-card">
-            <div className="job-post-details-header">
-              <Typography.Title level={3}>{jobPost.title}</Typography.Title>
-              <Typography.Text type="secondary">
-                Posted on {formatDate(jobPost.createdAt)}
-              </Typography.Text>
-            </div>
-
-            <Typography.Paragraph>{jobPost.description}</Typography.Paragraph>
-
-            <div className="job-post-details-section">
-              <Typography.Title level={5}>Required Skills</Typography.Title>
-              <Space size={[8, 8]} wrap>
-                {jobPost.requiredSkills.map((skill) => (
-                  <Tag color="blue" key={skill}>
-                    {skill}
-                  </Tag>
-                ))}
-              </Space>
-            </div>
-
-            <div className="job-post-details-section">
-              <Typography.Title level={5}>Preferred Skills</Typography.Title>
-              <Space size={[8, 8]} wrap>
-                {jobPost.preferredSkills.map((skill) => (
-                  <Tag key={skill}>{skill}</Tag>
-                ))}
-              </Space>
-            </div>
-
-            <div className="job-post-details-section">
-              <Typography.Title level={5}>Responsibilities</Typography.Title>
-              <ul className="job-post-details-list">
-                {jobPost.responsibilities.map((responsibility, index) => (
-                  <li key={index}>
-                    <Typography.Text>{responsibility}</Typography.Text>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </Card>
-
-          <Card className="job-post-details-card" title="Overview">
-            <Descriptions column={1} size="small">
-              <Descriptions.Item label="Experience">
-                {formatExperienceRange(jobPost.experience)}
-              </Descriptions.Item>
-              <Descriptions.Item label="Education">
-                {jobPost.education.required
-                  ? jobPost.education.degree
-                  : "Not required"}
-              </Descriptions.Item>
-              <Descriptions.Item label="Field of Study">
-                {jobPost.education.field}
-              </Descriptions.Item>
-              <Descriptions.Item label="Created">
-                {formatDate(jobPost.createdAt)}
-              </Descriptions.Item>
-              <Descriptions.Item label="Last Updated">
-                {formatDate(jobPost.updatedAt)}
-              </Descriptions.Item>
-            </Descriptions>
-          </Card>
-        </div>
-      )}
+      <Tabs
+        className="job-post-details-tabs"
+        activeKey={activeTab}
+        onChange={handleTabChange}
+        items={[
+          {
+            key: "details" as JobPostDetailsTab,
+            label: "Details",
+            children: (
+              <div className="job-post-details-tab-content">
+                <JobPostDetailsInfo
+                  jobPost={jobPost}
+                  isLoading={isJobPostLoading}
+                />
+              </div>
+            ),
+          },
+          {
+            key: "applications" as JobPostDetailsTab,
+            label: "Applications",
+            children: (
+              <div className="job-post-details-tab-content">
+                <JobPostApplications jobPostId={id} />
+              </div>
+            ),
+          },
+        ]}
+      />
     </div>
   );
 };

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import "./PageBreadcrumb.scss";
 
 export interface PageBreadcrumbItem {
-  label: string;
+  label: ReactNode;
   path?: string;
 }
 
@@ -18,7 +18,11 @@ const PageBreadcrumb = ({ items, cta }: PageBreadcrumbProps) => {
     <div className="page-breadcrumb">
       <Breadcrumb
         items={items.map((item) => ({
-          title: item.path ? <Link to={item.path}>{item.label}</Link> : item.label,
+          title: item.path ? (
+            <Link to={item.path}>{item.label}</Link>
+          ) : (
+            item.label
+          ),
         }))}
       />
 

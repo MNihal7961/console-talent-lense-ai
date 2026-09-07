@@ -1,5 +1,6 @@
 import { Typography } from "antd";
 import { IoBriefcase, IoGrid } from "react-icons/io5";
+import { TbFileSearch } from "react-icons/tb";
 import { useLocation, useNavigate } from "react-router-dom";
 
 interface SidebarContentProps {
@@ -9,6 +10,7 @@ interface SidebarContentProps {
 const navItems = [
   { path: "/", label: "Dashboard", icon: <IoGrid /> },
   { path: "/job-post", label: "Job Posts", icon: <IoBriefcase /> },
+  { path: "/screening", label: "Screening", icon: <TbFileSearch size={20}/> },
 ];
 
 const SidebarContent = ({ onNavigate }: SidebarContentProps) => {
@@ -21,9 +23,7 @@ const SidebarContent = ({ onNavigate }: SidebarContentProps) => {
   };
 
   const isActive = (path: string) =>
-    path === "/"
-      ? location.pathname === "/"
-      : location.pathname.includes(path);
+    path === "/" ? location.pathname === "/" : location.pathname.includes(path);
 
   return (
     <>
