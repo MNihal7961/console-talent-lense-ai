@@ -154,6 +154,10 @@ const ScreeningResult = () => {
 
   const isCompleted =
     jobApplication?.screeningStatus === ScreeningStatus.SCREENING_COMPLETED;
+  const isProcessingFailed =
+    jobApplication?.screeningStatus ===
+      ScreeningStatus.RESUME_PARSING_FAILED ||
+    jobApplication?.screeningStatus === ScreeningStatus.SCREENING_FAILED;
   const statusMeta = jobApplication
     ? SCREENING_STATUS_META[jobApplication.screeningStatus]
     : null;
@@ -193,10 +197,19 @@ const ScreeningResult = () => {
       ) : !isCompleted || !screeningResult ? (
         <Card className="screening-result-card">
           <div className="screening-result-processing">
-            <Title level={4}>Screening in progress</Title>
+            <Title level={4}>
+              {!isProcessingFailed && (
+                <LoadingOutlined
+                  spin
+                  className="screening-result-processing-spinner"
+                />
+              )}
+              {isProcessingFailed ? "Screening failed" : "Screening in progress"}
+            </Title>
             <Paragraph type="secondary">
-              We'll show the result for "{jobApplication.fileName}" here as soon
-              as screening finishes.
+              {isProcessingFailed
+                ? `Something went wrong while screening "${jobApplication.fileName}". Try uploading it again.`
+                : `We'll show the result for "${jobApplication.fileName}" here as soon as screening finishes.`}
             </Paragraph>
             {statusMeta && (
               <div className="screening-result-processing-bar">

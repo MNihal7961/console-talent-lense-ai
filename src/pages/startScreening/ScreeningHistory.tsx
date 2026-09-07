@@ -102,6 +102,12 @@ const ScreeningHistory = ({
                     className="screening-history-item-progress-status"
                     title={statusMeta.label}
                   >
+                    {!isCompleted && !isFailed && (
+                      <LoadingOutlined
+                        spin
+                        className="screening-history-item-progress-spinner"
+                      />
+                    )}
                     {statusMeta.label}
                   </Typography.Text>
                   <Typography.Text

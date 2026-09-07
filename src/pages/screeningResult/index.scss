@@ -25,6 +25,11 @@
     padding: 16px 0;
   }
 
+  .screening-result-processing-spinner {
+    margin-right: 10px;
+    color: $color-primary;
+  }
+
   .screening-result-processing-bar {
     width: 100%;
     max-width: 360px;
