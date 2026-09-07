@@ -73,7 +73,7 @@ const Login: React.FC = () => {
                 Test Credentials
               </Typography.Text>
               <Typography.Text className="auth-test-credentials-row">
-                Email: <strong>nihal@gamil.com</strong>
+                Email: <strong>nihal@gmail.com</strong>
               </Typography.Text>
               <Typography.Text className="auth-test-credentials-row">
                 Password: <strong>Nihal@123</strong>
