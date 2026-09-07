@@ -20,6 +20,7 @@ export type ScreeningStatus =
 
 export interface JobApplication {
   _id: string;
+  candidateName: string | null;
   jobPostId: string;
   fileName: string;
   resumeId: string | null;
