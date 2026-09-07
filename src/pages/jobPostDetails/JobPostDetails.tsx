@@ -10,6 +10,7 @@ import {
   Tag,
   Typography,
 } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import { TbPlayerPlay } from "react-icons/tb";
 import dayjs from "dayjs";
 import useJobPost from "../../hooks/useJobPost";
@@ -98,7 +99,13 @@ const JobPostDetails = () => {
         items={[
           { label: "Dashboard", path: "/" },
           { label: "Job Posts", path: "/job-post" },
-          { label: jobPost?.title ?? "Job Post Details" },
+          {
+            label: isJobPostLoading ? (
+              <LoadingOutlined spin />
+            ) : (
+              (jobPost?.title ?? "Job Post Details")
+            ),
+          },
         ]}
         cta={
           id && (
