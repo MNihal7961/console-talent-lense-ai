@@ -230,13 +230,11 @@ const JobPostApplications = ({ jobPostId }: JobPostApplicationsProps) => {
 
         const statusMeta =
           SCREENING_STATUS_META[row.jobApplication.screeningStatus];
+        const isExceptionState = statusMeta.progressStatus === "exception";
         return (
           <Tag
-            color={
-              statusMeta.progressStatus === "exception"
-                ? "error"
-                : "processing"
-            }
+            color={isExceptionState ? "error" : "processing"}
+            icon={isExceptionState ? undefined : <LoadingOutlined spin />}
           >
             {statusMeta.label}
           </Tag>
