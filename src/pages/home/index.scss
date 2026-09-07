@@ -1,0 +1,94 @@
+.home-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.home-greeting {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.home-greeting-title {
+  margin-bottom: 0 !important;
+}
+
+.home-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.home-stat-card {
+  border: 1px solid $color-border;
+
+  .ant-card-body {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+}
+
+.home-stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  font-size: 22px;
+
+  &.primary {
+    background-color: rgba($color-primary, 0.1);
+    color: $color-primary;
+  }
+
+  &.success {
+    background-color: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+
+  &.danger {
+    background-color: rgba($color-danger, 0.1);
+    color: $color-danger;
+  }
+}
+
+.home-stat-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.home-stat-value {
+  margin-bottom: 0 !important;
+}
+
+.home-stat-value-skeleton {
+  width: 56px !important;
+  height: 30px !important;
+  margin-bottom: 4px;
+
+  .ant-skeleton-button {
+    width: 56px !important;
+    height: 30px !important;
+  }
+}
+
+.home-stat-label {
+  font-size: 13px;
+}
+
+@media (max-width: 992px) {
+  .home-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .home-stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
