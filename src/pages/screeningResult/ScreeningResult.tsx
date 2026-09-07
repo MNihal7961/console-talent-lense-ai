@@ -30,29 +30,16 @@ import useScreeningStatusUpdates from "../../hooks/useScreeningStatusUpdates";
 import type { JobApplication } from "../../interface/job-application";
 import { ScreeningStatus } from "../../interface/job-application";
 import {
-  ConfidenceLevel,
   MatchStatus,
   RequirementCategory,
   RequirementStatus,
   type ScreeningRequirement,
 } from "../../interface/screening-result";
 import { SCREENING_STATUS_META } from "../../utils/screeningStatus";
+import { CONFIDENCE_META, MATCH_STATUS_META } from "../../utils/matchStatus";
 import "./index.scss";
 
 const { Title, Paragraph, Text } = Typography;
-
-const MATCH_STATUS_META: Record<MatchStatus, { label: string; color: string }> = {
-  [MatchStatus.STRONG_MATCH]: { label: "Strong Match", color: "success" },
-  [MatchStatus.GOOD_MATCH]: { label: "Good Match", color: "blue" },
-  [MatchStatus.PARTIAL_MATCH]: { label: "Partial Match", color: "warning" },
-  [MatchStatus.WEAK_MATCH]: { label: "Weak Match", color: "error" },
-};
-
-const CONFIDENCE_META: Record<ConfidenceLevel, { label: string; color: string }> = {
-  [ConfidenceLevel.HIGH]: { label: "High Confidence", color: "success" },
-  [ConfidenceLevel.MEDIUM]: { label: "Medium Confidence", color: "warning" },
-  [ConfidenceLevel.LOW]: { label: "Low Confidence", color: "default" },
-};
 
 const REQUIREMENT_CATEGORY_LABEL: Record<RequirementCategory, string> = {
   [RequirementCategory.REQUIRED_SKILL]: "Required Skills",
@@ -122,21 +109,24 @@ const ScreeningResult = () => {
     ? SCREENING_STATUS_META[jobApplication.screeningStatus]
     : null;
 
+  const breadcrumbItems = [
+    { label: "Dashboard", path: "/" },
+    { label: "Screening", path: "/screening" },
+    ...(jobPost && jobApplication
+      ? [{ label: jobPost.title, path: `/screening/${jobApplication.jobPostId}` }]
+      : []),
+    {
+      label: isLoading ? (
+        <LoadingOutlined spin />
+      ) : (
+        (jobApplication?.fileName ?? "Screening Result")
+      ),
+    },
+  ];
+
   return (
     <div className="screening-result-page">
-      <PageBreadcrumb
-        items={[
-          { label: "Dashboard", path: "/" },
-          { label: "Screening", path: "/screening" },
-          {
-            label: isLoading ? (
-              <LoadingOutlined spin />
-            ) : (
-              (jobApplication?.fileName ?? "Screening Result")
-            ),
-          },
-        ]}
-      />
+      <PageBreadcrumb items={breadcrumbItems} />
 
       {isLoading ? (
         <Card className="screening-result-card">
