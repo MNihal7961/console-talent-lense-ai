@@ -168,6 +168,12 @@
     margin-bottom: 16px;
   }
 
+  .screening-result-status-decided {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
   .screening-result-ai-suggestion {
     display: flex;
     align-items: flex-start;

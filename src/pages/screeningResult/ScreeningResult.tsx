@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 import {
   Button,
   Card,
@@ -268,67 +269,84 @@ const ScreeningResult = () => {
                 </Tag>
               </div>
 
-              <div
-                className={`screening-result-ai-suggestion ${
-                  getAiSuggestedStatus(screeningResult) ===
-                  JobApplicationStatus.SHORTLISTED
-                    ? "positive"
-                    : "negative"
-                }`}
-              >
-                <TbSparkles className="screening-result-ai-suggestion-icon" />
-                <Text>
-                  <Text strong>TalentLens.ai</Text> recommends marking this
-                  candidate as{" "}
-                  <Text strong>
-                    {
-                      JOB_APPLICATION_STATUS_META[
-                        getAiSuggestedStatus(screeningResult)
-                      ].label
-                    }
+              {jobApplication.status !== JobApplicationStatus.APPLIED ? (
+                <div className="screening-result-status-decided">
+                  {jobApplication.status ===
+                  JobApplicationStatus.SHORTLISTED ? (
+                    <TbCircleCheck className="screening-result-requirement-icon matched" />
+                  ) : (
+                    <TbCircleX className="screening-result-requirement-icon missing" />
+                  )}
+                  <Text>
+                    Marked as{" "}
+                    <Text strong>
+                      {JOB_APPLICATION_STATUS_META[jobApplication.status].label}
+                    </Text>{" "}
+                    on{" "}
+                    {dayjs(jobApplication.updatedAt).format(
+                      "DD MMM YYYY, hh:mm A",
+                    )}
                   </Text>
-                  .
-                </Text>
-              </div>
+                </div>
+              ) : (
+                <>
+                  <div
+                    className={`screening-result-ai-suggestion ${
+                      getAiSuggestedStatus(screeningResult) ===
+                      JobApplicationStatus.SHORTLISTED
+                        ? "positive"
+                        : "negative"
+                    }`}
+                  >
+                    <TbSparkles className="screening-result-ai-suggestion-icon" />
+                    <Text>
+                      <Text strong>TalentLens.ai</Text> recommends marking this
+                      candidate as{" "}
+                      <Text strong>
+                        {
+                          JOB_APPLICATION_STATUS_META[
+                            getAiSuggestedStatus(screeningResult)
+                          ].label
+                        }
+                      </Text>
+                      .
+                    </Text>
+                  </div>
 
-              <div className="screening-result-status-actions">
-                <Button
-                  icon={<TbUserCheck />}
-                  disabled={
-                    jobApplication.status === JobApplicationStatus.SHORTLISTED
-                  }
-                  className={
-                    getAiSuggestedStatus(screeningResult) ===
-                    JobApplicationStatus.SHORTLISTED
-                      ? "screening-result-ai-cta glow-success"
-                      : undefined
-                  }
-                  onClick={() =>
-                    setPendingStatus(JobApplicationStatus.SHORTLISTED)
-                  }
-                >
-                  Mark as Shortlisted
-                </Button>
+                  <div className="screening-result-status-actions">
+                    <Button
+                      icon={<TbUserCheck />}
+                      className={
+                        getAiSuggestedStatus(screeningResult) ===
+                        JobApplicationStatus.SHORTLISTED
+                          ? "screening-result-ai-cta glow-success"
+                          : undefined
+                      }
+                      onClick={() =>
+                        setPendingStatus(JobApplicationStatus.SHORTLISTED)
+                      }
+                    >
+                      Mark as Shortlisted
+                    </Button>
 
-                <Button
-                  danger
-                  icon={<TbUserX />}
-                  disabled={
-                    jobApplication.status === JobApplicationStatus.REJECTED
-                  }
-                  className={
-                    getAiSuggestedStatus(screeningResult) ===
-                    JobApplicationStatus.REJECTED
-                      ? "screening-result-ai-cta glow-danger"
-                      : undefined
-                  }
-                  onClick={() =>
-                    setPendingStatus(JobApplicationStatus.REJECTED)
-                  }
-                >
-                  Mark as Rejected
-                </Button>
-              </div>
+                    <Button
+                      danger
+                      icon={<TbUserX />}
+                      className={
+                        getAiSuggestedStatus(screeningResult) ===
+                        JobApplicationStatus.REJECTED
+                          ? "screening-result-ai-cta glow-danger"
+                          : undefined
+                      }
+                      onClick={() =>
+                        setPendingStatus(JobApplicationStatus.REJECTED)
+                      }
+                    >
+                      Mark as Rejected
+                    </Button>
+                  </div>
+                </>
+              )}
             </Card>
 
             <Card className="screening-result-card" title="Requirements">
