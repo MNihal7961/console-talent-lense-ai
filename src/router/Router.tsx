@@ -11,6 +11,7 @@ import JobPostDetails from "../pages/jobPostDetails/JobPostDetails";
 import JobPostGenrator from "../pages/jobPostGenrator/JobPostGenrator";
 import JobPostcreator from "../pages/jobPostcreator/JobPostcreator";
 import Screening from "../pages/screening/Screening";
+import StartScreening from "../pages/startScreening/StartScreening";
 import ScreeningResult from "../pages/screeningResult/ScreeningResult";
 
 function Router() {
@@ -32,7 +33,11 @@ function Router() {
               <Route path="/job-post/create" element={<JobPostcreator />} />
               <Route path="/screening" element={<Screening />} />
               <Route
-                path="/screening/:jobApplicationId"
+                path="/screening/:jobPostId"
+                element={<StartScreening />}
+              />
+              <Route
+                path="/screening/result/:jobApplicationId"
                 element={<ScreeningResult />}
               />
             </Route>
