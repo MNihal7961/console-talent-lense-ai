@@ -1,4 +1,4 @@
-import { Card, Typography } from "antd";
+import { Card, Skeleton, Typography } from "antd";
 import {
   TbBriefcase,
   TbFileText,
@@ -6,6 +6,8 @@ import {
   TbUserX,
 } from "react-icons/tb";
 import { useAuth } from "../../contexts/AuthContext";
+import useStatistics from "../../hooks/useStatistics";
+import CountUpNumber from "./CountUpNumber";
 import "./index.scss";
 
 const getGreeting = () => {
@@ -16,40 +18,41 @@ const getGreeting = () => {
   return { text: "Good evening", emoji: "🌙" };
 };
 
-const STATS = [
-  {
-    key: "job-posts",
-    label: "Total Job Posts",
-    value: 12,
-    icon: <TbBriefcase />,
-    accent: "primary",
-  },
-  {
-    key: "applications",
-    label: "Total Applications",
-    value: 86,
-    icon: <TbFileText />,
-    accent: "primary",
-  },
-  {
-    key: "shortlisted",
-    label: "Shortlisted",
-    value: 34,
-    icon: <TbUserCheck />,
-    accent: "success",
-  },
-  {
-    key: "rejected",
-    label: "Rejected",
-    value: 10,
-    icon: <TbUserX />,
-    accent: "danger",
-  },
-] as const;
-
 const Home = () => {
   const { user } = useAuth();
+  const { statistics, isStatisticsLoading } = useStatistics();
   const greeting = getGreeting();
+
+  const stats = [
+    {
+      key: "job-posts",
+      label: "Total Job Posts",
+      value: statistics?.totalJobPosts ?? 0,
+      icon: <TbBriefcase />,
+      accent: "primary",
+    },
+    {
+      key: "applications",
+      label: "Total Applications",
+      value: statistics?.totalApplications ?? 0,
+      icon: <TbFileText />,
+      accent: "primary",
+    },
+    {
+      key: "shortlisted",
+      label: "Shortlisted",
+      value: statistics?.shortlisted ?? 0,
+      icon: <TbUserCheck />,
+      accent: "success",
+    },
+    {
+      key: "rejected",
+      label: "Rejected",
+      value: statistics?.rejected ?? 0,
+      icon: <TbUserX />,
+      accent: "danger",
+    },
+  ] as const;
 
   return (
     <div className="home-page">
@@ -63,15 +66,23 @@ const Home = () => {
       </div>
 
       <div className="home-stats-grid">
-        {STATS.map((stat) => (
+        {stats.map((stat) => (
           <Card key={stat.key} className="home-stat-card">
             <span className={`home-stat-icon ${stat.accent}`}>
               {stat.icon}
             </span>
             <div className="home-stat-body">
-              <Typography.Title level={3} className="home-stat-value">
-                {stat.value}
-              </Typography.Title>
+              {isStatisticsLoading ? (
+                <Skeleton.Button
+                  active
+                  size="small"
+                  className="home-stat-value-skeleton"
+                />
+              ) : (
+                <Typography.Title level={3} className="home-stat-value">
+                  <CountUpNumber value={stat.value} />
+                </Typography.Title>
+              )}
               <Typography.Text type="secondary" className="home-stat-label">
                 {stat.label}
               </Typography.Text>

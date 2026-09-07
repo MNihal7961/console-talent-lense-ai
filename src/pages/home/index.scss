@@ -66,6 +66,17 @@
   margin-bottom: 0 !important;
 }
 
+.home-stat-value-skeleton {
+  width: 56px !important;
+  height: 30px !important;
+  margin-bottom: 4px;
+
+  .ant-skeleton-button {
+    width: 56px !important;
+    height: 30px !important;
+  }
+}
+
 .home-stat-label {
   font-size: 13px;
 }
