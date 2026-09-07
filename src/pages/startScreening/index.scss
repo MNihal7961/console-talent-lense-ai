@@ -88,10 +88,10 @@
     width: 36px;
     height: 36px;
     flex-shrink: 0;
-    border-radius: 8px;
-    background-color: rgba($color-danger, 0.1);
-    color: $color-danger;
-    font-size: 18px;
+    border-radius: 50%;
+    background-color: rgba($color-primary, 0.1);
+    color: $color-primary;
+    font-size: 20px;
   }
 
   .screening-history-item-text {
@@ -99,6 +99,30 @@
     flex-direction: column;
     gap: 2px;
     min-width: 0;
+  }
+
+  .screening-history-item-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .screening-history-item-row-icon {
+    flex-shrink: 0;
+    font-size: 14px;
+
+    &.candidate {
+      color: $color-primary;
+    }
+
+    &.file {
+      color: $color-danger;
+    }
+  }
+
+  .screening-history-item-row-text {
+    font-size: 13px;
   }
 
   .screening-history-item-date {
