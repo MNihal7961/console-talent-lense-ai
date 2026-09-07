@@ -1,0 +1,232 @@
+.screening-page {
+  .screening-intro {
+    margin-bottom: 16px;
+  }
+
+  .screening-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .screening-search {
+    flex: 0 1 320px;
+    min-width: 200px;
+    max-width: 400px;
+  }
+
+  .screening-loading {
+    display: flex;
+    justify-content: center;
+    padding: 48px 0;
+  }
+
+  .screening-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+
+  .screening-card {
+    border: 1px solid $color-border;
+    display: flex;
+    flex-direction: column;
+
+    .ant-card-body {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+  }
+
+  .screening-card-title {
+    margin-bottom: 4px !important;
+  }
+
+  .screening-card-description {
+    flex: 1;
+    margin-bottom: 12px !important;
+  }
+
+  .screening-card-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .screening-card-cta {
+    margin-top: auto;
+  }
+
+  @media (max-width: 576px) {
+    .screening-filters {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .screening-search {
+      width: 100%;
+      max-width: none;
+    }
+  }
+}
+
+// Rendered inside an antd Modal, which portals to <body>, so these
+// live outside `.screening-page` and are scoped by the modal's own class.
+.screening-how-it-works-modal {
+  .screening-stepper {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+
+  .screening-stepper-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  .screening-stepper-node-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 12px;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 50%;
+      height: 2px;
+      background-color: $color-border;
+      transform: translateY(-50%);
+    }
+
+    &::before {
+      left: 0;
+    }
+
+    &::after {
+      right: 0;
+    }
+  }
+
+  .screening-stepper-item:first-child .screening-stepper-node-row::before,
+  .screening-stepper-item:last-child .screening-stepper-node-row::after {
+    display: none;
+  }
+
+  .screening-stepper-circle-wrap {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+  }
+
+  .screening-stepper-circle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 2px solid $color-primary;
+    color: $color-primary;
+    font-size: 18px;
+  }
+
+  .screening-stepper-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background-color: $color-primary;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  .screening-stepper-title {
+    display: block;
+    margin-bottom: 4px !important;
+    font-size: 13px;
+  }
+
+  .screening-stepper-desc {
+    margin-bottom: 0 !important;
+    font-size: 12px;
+  }
+
+  .screening-behind-scenes {
+    background-color: #f8f9ff;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    padding: 20px;
+
+    .screening-stepper-circle {
+      background-color: #f8f9ff;
+    }
+  }
+
+  .screening-behind-scenes-label {
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 576px) {
+    .screening-stepper {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .screening-stepper-item {
+      flex-direction: row;
+      align-items: flex-start;
+      text-align: left;
+      padding: 0 0 0 22px;
+      position: relative;
+    }
+
+    .screening-stepper-node-row {
+      width: auto;
+      margin-bottom: 0;
+      margin-right: 12px;
+
+      &::before,
+      &::after {
+        left: 50%;
+        top: 0;
+        width: 2px;
+        height: 50%;
+        transform: translateX(-50%);
+      }
+
+      &::after {
+        top: 50%;
+        right: auto;
+      }
+    }
+
+    .screening-stepper-item:not(:last-child) {
+      padding-bottom: 20px;
+    }
+  }
+}
