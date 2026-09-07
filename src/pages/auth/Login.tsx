@@ -67,6 +67,19 @@ const Login: React.FC = () => {
                 Sign in to resume candidate assessments and pipeline audits.
               </Typography.Text>
             </div>
+
+            <div className="auth-test-credentials">
+              <Typography.Text strong className="auth-test-credentials-title">
+                Test Credentials
+              </Typography.Text>
+              <Typography.Text className="auth-test-credentials-row">
+                Email: <strong>nihal@gamil.com</strong>
+              </Typography.Text>
+              <Typography.Text className="auth-test-credentials-row">
+                Password: <strong>Nihal@123</strong>
+              </Typography.Text>
+            </div>
+
             <Form<LoginDTO>
               form={form}
               layout="vertical"

@@ -91,6 +91,29 @@
   margin: 0 auto;
 }
 
+.auth-test-credentials {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  max-width: 500px;
+  margin: 12px auto 0;
+  padding: 12px 16px;
+  border: 1px solid rgba($color-danger, 0.35);
+  border-radius: 8px;
+  background-color: rgba($color-danger, 0.08);
+}
+
+.auth-test-credentials-title {
+  color: $color-danger;
+  margin-bottom: 2px;
+}
+
+.auth-test-credentials-row {
+  font-size: 13px;
+  color: $color-danger;
+}
+
 .auth-form-section {
   width: 100%;
   display: flex;
