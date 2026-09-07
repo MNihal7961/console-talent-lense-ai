@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
+  Button,
   Card,
   Descriptions,
   Empty,
@@ -9,6 +10,7 @@ import {
   Tag,
   Typography,
 } from "antd";
+import { TbPlayerPlay } from "react-icons/tb";
 import dayjs from "dayjs";
 import useJobPost from "../../hooks/useJobPost";
 import type { JobPost as JobPostType } from "../../interface/job-post";
@@ -83,6 +85,7 @@ const JobPostDetailsSkeleton = () => (
 
 const JobPostDetails = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const { isJobPostLoading, jobPost, loadJobPostDetails } = useJobPost();
 
   useEffect(() => {
@@ -97,6 +100,17 @@ const JobPostDetails = () => {
           { label: "Job Posts", path: "/job-post" },
           { label: jobPost?.title ?? "Job Post Details" },
         ]}
+        cta={
+          id && (
+            <Button
+              type="primary"
+              icon={<TbPlayerPlay />}
+              onClick={() => navigate(`/screening/${id}`)}
+            >
+              Start Screening
+            </Button>
+          )
+        }
       />
 
       {isJobPostLoading ? (
@@ -164,9 +178,6 @@ const JobPostDetails = () => {
               </Descriptions.Item>
               <Descriptions.Item label="Created">
                 {formatDate(jobPost.createdAt)}
-              </Descriptions.Item>
-              <Descriptions.Item label="Last Updated">
-                {formatDate(jobPost.updatedAt)}
               </Descriptions.Item>
             </Descriptions>
           </Card>
