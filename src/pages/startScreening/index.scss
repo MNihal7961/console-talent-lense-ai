@@ -157,6 +157,11 @@
     text-overflow: ellipsis;
   }
 
+  .screening-history-item-progress-spinner {
+    margin-right: 4px;
+    color: $color-primary;
+  }
+
   .screening-history-item-progress-percent {
     flex-shrink: 0;
   }
