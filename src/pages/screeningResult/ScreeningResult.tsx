@@ -1,10 +1,12 @@
 import { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   Button,
   Card,
   Drawer,
   Empty,
+  Modal,
   Progress,
   Skeleton,
   Space,
@@ -23,20 +25,30 @@ import {
   TbLink,
   TbMail,
   TbPhone,
+  TbSparkles,
+  TbUserCheck,
+  TbUserX,
 } from "react-icons/tb";
 import PageBreadcrumb from "../../components/common/PageBreadcrumb";
 import useScreeningResult from "../../hooks/useScreeningResult";
 import useScreeningStatusUpdates from "../../hooks/useScreeningStatusUpdates";
-import type { JobApplication } from "../../interface/job-application";
-import { ScreeningStatus } from "../../interface/job-application";
+import useJobApplicationStatusUpdate from "../../hooks/useJobApplicationStatusUpdate";
+import {
+  JobApplicationStatus,
+  ScreeningStatus,
+  type JobApplication,
+} from "../../interface/job-application";
 import {
   MatchStatus,
   RequirementCategory,
   RequirementStatus,
   type ScreeningRequirement,
+  type ScreeningResult as ScreeningResultData,
 } from "../../interface/screening-result";
 import { SCREENING_STATUS_META } from "../../utils/screeningStatus";
 import { CONFIDENCE_META, MATCH_STATUS_META } from "../../utils/matchStatus";
+import { JOB_APPLICATION_STATUS_META } from "../../utils/jobApplicationStatus";
+import { getErrorMessage } from "../../utils/error";
 import "./index.scss";
 
 const { Title, Paragraph, Text } = Typography;
@@ -61,6 +73,22 @@ const REQUIREMENT_STATUS_ICON: Record<RequirementStatus, React.ReactNode> = {
   ),
 };
 
+const getAiSuggestedStatus = (
+  screeningResult: ScreeningResultData,
+): JobApplicationStatus => {
+  switch (screeningResult.matchStatus) {
+    case MatchStatus.STRONG_MATCH:
+    case MatchStatus.GOOD_MATCH:
+      return JobApplicationStatus.SHORTLISTED;
+    case MatchStatus.WEAK_MATCH:
+      return JobApplicationStatus.REJECTED;
+    default:
+      return screeningResult.matchScore >= 50
+        ? JobApplicationStatus.SHORTLISTED
+        : JobApplicationStatus.REJECTED;
+  }
+};
+
 const groupRequirementsByCategory = (requirements: ScreeningRequirement[]) => {
   const groups = new Map<RequirementCategory, ScreeningRequirement[]>();
 
@@ -75,6 +103,9 @@ const groupRequirementsByCategory = (requirements: ScreeningRequirement[]) => {
 const ScreeningResult = () => {
   const { jobApplicationId } = useParams<{ jobApplicationId: string }>();
   const [isResumeDrawerOpen, setIsResumeDrawerOpen] = useState(false);
+  const [pendingStatus, setPendingStatus] =
+    useState<JobApplicationStatus | null>(null);
+  const { isUpdating, updateStatus } = useJobApplicationStatusUpdate();
   const {
     jobApplication,
     setJobApplication,
@@ -103,6 +134,23 @@ const ScreeningResult = () => {
 
   useScreeningStatusUpdates(handleScreeningStatusUpdated);
 
+  const handleConfirmStatusChange = async () => {
+    if (!pendingStatus || !jobApplication) return;
+
+    try {
+      const updated = await updateStatus(jobApplication._id, pendingStatus);
+      setJobApplication(updated);
+      toast.success(
+        `Marked ${jobApplication.candidateName ?? jobApplication.fileName} as ${JOB_APPLICATION_STATUS_META[pendingStatus].label}.`,
+      );
+      setPendingStatus(null);
+    } catch (error) {
+      toast.error(
+        getErrorMessage(error, "Couldn't update the application status."),
+      );
+    }
+  };
+
   const isCompleted =
     jobApplication?.screeningStatus === ScreeningStatus.SCREENING_COMPLETED;
   const statusMeta = jobApplication
@@ -113,7 +161,12 @@ const ScreeningResult = () => {
     { label: "Dashboard", path: "/" },
     { label: "Screening", path: "/screening" },
     ...(jobPost && jobApplication
-      ? [{ label: jobPost.title, path: `/screening/${jobApplication.jobPostId}` }]
+      ? [
+          {
+            label: jobPost.title,
+            path: `/screening/${jobApplication.jobPostId}`,
+          },
+        ]
       : []),
     {
       label: isLoading ? (
@@ -141,8 +194,8 @@ const ScreeningResult = () => {
           <div className="screening-result-processing">
             <Title level={4}>Screening in progress</Title>
             <Paragraph type="secondary">
-              We'll show the result for "{jobApplication.fileName}" here as
-              soon as screening finishes.
+              We'll show the result for "{jobApplication.fileName}" here as soon
+              as screening finishes.
             </Paragraph>
             {statusMeta && (
               <div className="screening-result-processing-bar">
@@ -173,17 +226,25 @@ const ScreeningResult = () => {
                 />
 
                 <div className="screening-result-header-info">
-                  <Title level={4}>{jobApplication.fileName}</Title>
+                  <Title level={4}>
+                    {jobApplication.candidateName ?? jobApplication.fileName}
+                  </Title>
                   {jobPost && (
                     <Text type="secondary">
                       Screened against {jobPost.title}
                     </Text>
                   )}
                   <Space size={[8, 8]} wrap className="screening-result-tags">
-                    <Tag color={MATCH_STATUS_META[screeningResult.matchStatus].color}>
+                    <Tag
+                      color={
+                        MATCH_STATUS_META[screeningResult.matchStatus].color
+                      }
+                    >
                       {MATCH_STATUS_META[screeningResult.matchStatus].label}
                     </Tag>
-                    <Tag color={CONFIDENCE_META[screeningResult.confidence].color}>
+                    <Tag
+                      color={CONFIDENCE_META[screeningResult.confidence].color}
+                    >
                       {CONFIDENCE_META[screeningResult.confidence].label}
                     </Tag>
                   </Space>
@@ -193,6 +254,81 @@ const ScreeningResult = () => {
               <Paragraph className="screening-result-summary">
                 {screeningResult.summary}
               </Paragraph>
+            </Card>
+
+            <Card className="screening-result-card" title="Application Status">
+              <div className="screening-result-status-current">
+                <Text type="secondary">Current status:</Text>
+                <Tag
+                  color={
+                    JOB_APPLICATION_STATUS_META[jobApplication.status].color
+                  }
+                >
+                  {JOB_APPLICATION_STATUS_META[jobApplication.status].label}
+                </Tag>
+              </div>
+
+              <div
+                className={`screening-result-ai-suggestion ${
+                  getAiSuggestedStatus(screeningResult) ===
+                  JobApplicationStatus.SHORTLISTED
+                    ? "positive"
+                    : "negative"
+                }`}
+              >
+                <TbSparkles className="screening-result-ai-suggestion-icon" />
+                <Text>
+                  <Text strong>TalentLens.ai</Text> recommends marking this
+                  candidate as{" "}
+                  <Text strong>
+                    {
+                      JOB_APPLICATION_STATUS_META[
+                        getAiSuggestedStatus(screeningResult)
+                      ].label
+                    }
+                  </Text>
+                  .
+                </Text>
+              </div>
+
+              <div className="screening-result-status-actions">
+                <Button
+                  icon={<TbUserCheck />}
+                  disabled={
+                    jobApplication.status === JobApplicationStatus.SHORTLISTED
+                  }
+                  className={
+                    getAiSuggestedStatus(screeningResult) ===
+                    JobApplicationStatus.SHORTLISTED
+                      ? "screening-result-ai-cta glow-success"
+                      : undefined
+                  }
+                  onClick={() =>
+                    setPendingStatus(JobApplicationStatus.SHORTLISTED)
+                  }
+                >
+                  Mark as Shortlisted
+                </Button>
+
+                <Button
+                  danger
+                  icon={<TbUserX />}
+                  disabled={
+                    jobApplication.status === JobApplicationStatus.REJECTED
+                  }
+                  className={
+                    getAiSuggestedStatus(screeningResult) ===
+                    JobApplicationStatus.REJECTED
+                      ? "screening-result-ai-cta glow-danger"
+                      : undefined
+                  }
+                  onClick={() =>
+                    setPendingStatus(JobApplicationStatus.REJECTED)
+                  }
+                >
+                  Mark as Rejected
+                </Button>
+              </div>
             </Card>
 
             <Card className="screening-result-card" title="Requirements">
@@ -205,10 +341,7 @@ const ScreeningResult = () => {
                   </Title>
                   <div className="screening-result-requirement-list">
                     {requirements.map((requirement, index) => (
-                      <div
-                        key={index}
-                        className="screening-result-requirement"
-                      >
+                      <div key={index} className="screening-result-requirement">
                         {REQUIREMENT_STATUS_ICON[requirement.status]}
                         <div className="screening-result-requirement-body">
                           <Text strong>{requirement.requirement}</Text>
@@ -219,7 +352,9 @@ const ScreeningResult = () => {
                             {requirement.evidence}
                           </Paragraph>
                         </div>
-                        <Tag color={CONFIDENCE_META[requirement.confidence].color}>
+                        <Tag
+                          color={CONFIDENCE_META[requirement.confidence].color}
+                        >
                           {requirement.confidence}
                         </Tag>
                       </div>
@@ -313,7 +448,11 @@ const ScreeningResult = () => {
                   <Text type="secondary">{resume.recentRole}</Text>
                 )}
 
-                <Space direction="vertical" size={4} className="screening-result-contact">
+                <Space
+                  direction="vertical"
+                  size={4}
+                  className="screening-result-contact"
+                >
                   {resume.contactInfo.email && (
                     <Text>
                       <TbMail /> {resume.contactInfo.email}
@@ -353,9 +492,7 @@ const ScreeningResult = () => {
                   )}
                 </Space>
 
-                <Paragraph type="secondary">
-                  {resume.profileSummary}
-                </Paragraph>
+                <Paragraph type="secondary">{resume.profileSummary}</Paragraph>
 
                 <div className="screening-result-section">
                   <Title level={5}>Skills</Title>
@@ -438,6 +575,42 @@ const ScreeningResult = () => {
           />
         )}
       </Drawer>
+
+      <Modal
+        title={
+          pendingStatus === JobApplicationStatus.SHORTLISTED
+            ? "Shortlist this candidate?"
+            : "Reject this candidate?"
+        }
+        open={pendingStatus !== null}
+        centered
+        confirmLoading={isUpdating}
+        onOk={handleConfirmStatusChange}
+        onCancel={() => setPendingStatus(null)}
+        okText={
+          pendingStatus === JobApplicationStatus.SHORTLISTED
+            ? "Shortlist"
+            : "Reject"
+        }
+        okButtonProps={{
+          danger: pendingStatus === JobApplicationStatus.REJECTED,
+        }}
+      >
+        <Typography.Paragraph>
+          Mark{" "}
+          <strong>
+            {jobApplication?.candidateName ?? jobApplication?.fileName}
+          </strong>{" "}
+          as{" "}
+          <strong>
+            {pendingStatus
+              ? JOB_APPLICATION_STATUS_META[pendingStatus].label
+              : ""}
+          </strong>
+          ? This updates the application status for everyone reviewing this job
+          post.
+        </Typography.Paragraph>
+      </Modal>
     </div>
   );
 };
