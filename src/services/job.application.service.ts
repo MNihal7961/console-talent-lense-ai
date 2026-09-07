@@ -1,5 +1,8 @@
 import apiClient from "./api.client.service";
-import type { JobApplication } from "../interface/job-application";
+import type {
+  JobApplication,
+  JobApplicationStatus,
+} from "../interface/job-application";
 
 export class JobApplicationService {
   async getJobApplicationsByJobPost(
@@ -14,6 +17,16 @@ export class JobApplicationService {
   async findApplicationById(id: string): Promise<JobApplication | null> {
     const response = await apiClient.get(`/job-application/${id}`);
     return response.data || null;
+  }
+
+  async updateApplicationStatus(
+    id: string,
+    status: JobApplicationStatus,
+  ): Promise<JobApplication> {
+    const response = await apiClient.patch(`/job-application/${id}/status`, {
+      status,
+    });
+    return response.data;
   }
 }
 
